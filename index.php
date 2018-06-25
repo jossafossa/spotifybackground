@@ -9,7 +9,7 @@
 </head>
 <body>
 
-	<svg height="110" width="110">
+	<svg height="0" width="0">
   <defs>
     <filter id="f1" x="0" y="0">
       <feGaussianBlur in="SourceGraphic" stdDeviation="15" />
