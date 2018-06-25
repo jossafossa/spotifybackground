@@ -67,8 +67,17 @@ $(document).ready(function() {
 
 			var image = $('.image');
 			var bg = $('.background');
+			var bg2 = $('#svg-image');
 			var title = $('.title');
 			var artist = $('.artist');
+
+			// set correct bg size
+			// bg2.attr("width", window.innerWidth );
+			// bg2.attr("height", window.innerHeight );
+			// $("#svg-image-blur").attr("height", window.innerHeight );
+			// $("#svg-image-blur").attr("width", window.innerWidth );
+
+			// bg2.attr("y", -((window.innerWidth - window.innerHeight) / 2));
 
 			// Get the hash of the url
 			var hash = window.location.hash
@@ -94,7 +103,8 @@ $(document).ready(function() {
 			var scopes = [
 				"user-read-email", 
 				"user-read-currently-playing", 
-				"user-read-playback-state"
+				"user-read-playback-state",
+				"user-modify-playback-state"
 			];
 
 			// If there is no token, redirect to Spotify authorization
@@ -105,10 +115,12 @@ $(document).ready(function() {
 			console.log(_token);
 
 			
+			getMyCurrentTrack();
 
 			timer = setInterval(function() {
 				getMyCurrentTrack();
 			}, 1000)
+			var playing;
 
 			function getMyCurrentTrack() {
 				$.ajax({
@@ -121,9 +133,17 @@ $(document).ready(function() {
 				   		coverSmall = response['item']['album']['images'][0]['url'];
 				   		titleText = response['item']['name'];
 				   		artistText = response['item']['artists'][0]['name'];
+
+				       	playing = response["is_playing"];
+				       	if (playing == true) {
+				   				$('.pause i').attr("class","fa fa-pause");	
+				       	} else {				       		
+				   				$('.pause i').attr("class","fa fa-play");	
+				       	}
 				       	console.log(response);
 				       	image.css({"background-image":"url('" + cover + "')"});
 				       	bg.css({"background-image":"url('" + coverSmall + "')"});
+				       	bg2.attr({"href":coverSmall});
 				       	title.text(titleText);
 				       	artist.text(artistText);
 				   }
@@ -132,42 +152,83 @@ $(document).ready(function() {
 
 			$(".next").on("click", function() {nextTrack()});
 			$(".prev").on("click", function() {prevTrack()});
+			$(".pause").on("click", function() {
+				if (playing) {
+					pauseTrack();
+					playing = false;
+				} else {
+					playTrack();
+					playing = true;
+				}
+			});
 
 			function prevTrack() {
 				$.ajax({
+					 method: "POST",
 				   url: 'https://api.spotify.com/v1/me/player/previous',
 				   headers: {
 				       'Authorization': 'Bearer ' + _token
 				   },
 				   success: function(response) {
+			        console.log(response);
 				   	
-				   }
+				   },
+				   error: function(response){
+			        console.log(response);
+			     }
 				});
 			};
 
 			function pauseTrack() {
 				$.ajax({
+					 method: "PUT",
 				   url: 'https://api.spotify.com/v1/me/player/pause',
 				   headers: {
 				       'Authorization': 'Bearer ' + _token
 				   },
 				   success: function(response) {
-				   	
-				   }
+			        console.log(response);
+				   				$('.pause i').attr("class","fa fa-play");	
+				   },
+				   error: function(response){
+			        console.log(response);
+			     }
+				});
+			};
+
+			function playTrack() {
+				$.ajax({
+					 method: "PUT",
+				   url: 'https://api.spotify.com/v1/me/player/play',
+				   headers: {
+				       'Authorization': 'Bearer ' + _token
+				   },
+				   success: function(response) {
+				   				$('.pause i').attr("class","fa fa-pause");				   	
+			        console.log(response);
+				   },
+				   error: function(response){
+			        console.log(response);
+			     }
 				});
 			};
 				
 
 			function nextTrack() {
-				console.log('next');
 				$.ajax({
+					 method: "POST",
 				   url: 'https://api.spotify.com/v1/me/player/next',
 				   headers: {
 				       'Authorization': 'Bearer ' + _token
 				   },
 				   success: function(response) {
+			        console.log(response);
 				   	
-				   }
+				   },
+				   error: function(response){
+			        console.log(response);
+			     }
+
 				});
 			};
 			

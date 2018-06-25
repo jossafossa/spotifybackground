@@ -9,25 +9,24 @@
 </head>
 <body>
 
-	<svg height="0" width="0">
-  <defs>
-    <filter id="f1" x="0" y="0">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="15" />
+<svg id="svg-image-blur" class="background">
+    <image x="0" y="0" width="100%" height="100%" id="svg-image" filter="url(#blur-effect-1)" href="" preserveAspectRatio="xMaxYMid slice"/>
+
+    <filter id="blur-effect-1">
+        <feGaussianBlur stdDeviation="20" />
     </filter>
-  </defs>
-</svg>
+</svg> 
   
-	<div class="background"></div>
 	<div class="container">	
 		<div class="image" style="width:640px; height:640px"></div>
 		<h1 class="title"></h1>		
 		<h2 class="artist"></h2>
 	</div>
-	<!-- <div class="controls">
+	<div class="controls">
 		<div class="prev"><i class="fa fa-angle-left"></i></div>
-		<div class="pause"><i class="fa fa-pause"></i></div>
+		<div class="pause"><i class="fa fa-play"></i></div>
 		<div class="next"><i class="fa fa-angle-right"></i></div>
-	</div> -->
+	</div>
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

@@ -10,12 +10,12 @@ body {
   box-sizing: border-box;
 }
 
-svg {
+/*svg {
   position:absolute;
   height:0;
   width:0;
   overflow:hidden;
-}
+}*/
 
 .background { 
   background-size:cover;
@@ -28,6 +28,7 @@ svg {
   height:100vh;
   position:absolute;
   z-index:-1;
+  overflow:hidden;
 }
 
 .container {
@@ -43,10 +44,48 @@ svg {
   font-family: 'Lato', sans-serif;
   font-weight: 300;
   text-shadow:1px 1px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 0 400px 70px rgba(0,0,0,1) inset;
 }
 
 .image {
   box-shadow:1px 1px 20px rgba(0,0,0,0.3);
+}
+
+
+/* controls */
+
+.controls {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  z-index:100;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.controls > * {
+  width:4rem;
+  height:4rem;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:1rem;
+  background-color:rgba(0,0,0,0.2);
+  transition:0.5s;
+}
+
+.controls > *:hover {
+  transform:scale(1.2);
+  transition:.1s;
+  cursor:pointer;
+}
+
+.controls > *:active {
+  transform:scale(.9);
+  transition:.2s;
 }
 
 
