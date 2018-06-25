@@ -10,6 +10,12 @@ body {
   box-sizing: border-box;
 }
 
+svg {
+  position:absolute;
+  height:0;
+  width:0;
+  overflow:hidden;
+}
 
 .background { 
   background-size:cover;
