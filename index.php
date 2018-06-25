@@ -6,6 +6,15 @@
 	<link href="styles/main.css" rel="stylesheet" type="text/css"></link>
 </head>
 <body>
+
+	<svg height="110" width="110">
+  <defs>
+    <filter id="f1" x="0" y="0">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="15" />
+    </filter>
+  </defs>
+</svg>
+  
 	<div class="background"></div>
 	<div class="container">	
 		<div class="image" style="width:640px; height:640px"></div>
@@ -86,6 +95,7 @@
 		})
 
 	</script>
+
 
 	
 </body>
