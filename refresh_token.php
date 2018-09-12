@@ -3,7 +3,7 @@
 	// api settings
 	$client_id = 'f8c1676b7739450daf60050339b297b5';
 	$client_secret = '6fa89bf4e01243d38414cee037b074e0';
-	$redirect_uri = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]/refresh_token.php";
+	$redirect_uri = "https://slightlyshifted.nl/refresh_token.php";
 	$scope = [
 		"user-read-email", 
 		"user-read-currently-playing", 
