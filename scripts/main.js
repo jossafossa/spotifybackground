@@ -5,6 +5,7 @@ $(document).ready(function() {
 			var bg2 = $('#svg-image');
 			var title = $('.title');
 			var artist = $('.artist');
+			var album = $('.album');
 			var timeline = $('.timeline-bar');
 			var refreshTimeout = 1000;
 
@@ -135,10 +136,12 @@ $(document).ready(function() {
 			
 			getMyCurrentTrack();
 
-			timer = setInterval(function() {
+			timer = setInterval(function() {	
 				getMyCurrentTrack();
 			}, refreshTimeout)
 			var playing;
+			var shuffle;
+			var repeat;
 
 			function getMyCurrentTrack() {
 				$.ajax({
@@ -146,39 +149,91 @@ $(document).ready(function() {
 				   headers: {
 				       'Authorization': 'Bearer ' + _token
 				   },
-				   success: function(response) {
-				   		cover = response['item']['album']['images'][0]['url'];
-				   		coverSmall = response['item']['album']['images'][0]['url'];
-				   		titleText = response['item']['name'];
-				   		artistText = response['item']['artists'][0]['name'];
-
-				       	playing = response["is_playing"];
-				       	if (playing == true) {
-				   				$('.pause i').attr("class","fa fa-pause");	
-				       	} else {				       		
-				   				$('.pause i').attr("class","fa fa-play");	
-				       	}
-				       	console.log("updating");
-				       	console.log(response);
-				       	image.css({"background-image":"url('" + cover + "')"});
-				       	bg.css({"background-image":"url('" + coverSmall + "')"});
-				       	bg2.attr({"href":coverSmall});
-				       	title.text(titleText);
-				       	artist.text(artistText);
-
-
-				       	// timeline
-
-				       	currentTime = response['progress_ms'];
-				       	duration = response['item']['duration_ms'];
-				       	progress = 100 /duration * currentTime;
-				       	timeline.css({'width': progress + '%'});
+				   success: function(response) {	
+						update(response);
 				   }
 				});
 			};
 
+			function update(response) {
+
+				$.ajax({
+				   url: 'https://api.spotify.com/v1/me/player',
+				   headers: {
+				       'Authorization': 'Bearer ' + _token
+				   },
+				   success: function(response) {	
+						 shuffle = response["shuffle_state"];
+						 repeat = (response["repeat_state"] == "off" ? false : true );
+						 console.log(repeat);
+						 console.log(shuffle);
+
+						if (shuffle) {
+							$(".shuffle").addClass("active");
+						} else {
+							$(".shuffle").removeClass("active");
+						}
+
+						if (repeat) {
+							$(".repeat").addClass("active");
+						} else {
+							$(".repeat").removeClass("active");
+						}
+
+				   }
+				});
+
+				cover = response['item']['album']['images'][0]['url'];
+	   		coverSmall = response['item']['album']['images'][0]['url'];
+	   		titleText = response['item']['name'];
+	   		artistText = response['item']['artists'][0]['name'];
+	   		artistUri = response['item']['artists'][0]['uri'];
+	   		albumText = response['item']['album']['name'];
+	   		albumUri = response['item']['album']['uri'];
+
+	       	playing = response["is_playing"];
+	       	if (playing == true) {
+	   				$('.pause i').attr("class","fa fa-pause");	
+	       	} else {				       		
+	   				$('.pause i').attr("class","fa fa-play");	
+	       	}
+	       	console.log("updating");
+	       	console.log(response);
+	       	image.css({"background-image":"url('" + cover + "')"});
+	       	bg.css({"background-image":"url('" + coverSmall + "')"});
+	       	bg2.attr({"href":coverSmall});
+	       	title.text(titleText);
+	       	artist.text(artistText);
+	       	artist.parent().attr({"url": albumUri});
+	       	album.text(albumText);
+	       	album.parent().attr({"url": artistUri});
+
+
+	       	// timeline
+
+	       	currentTime = response['progress_ms'];
+	       	duration = response['item']['duration_ms'];
+	       	progress = 100 /duration * currentTime;
+	       	timeline.css({'width': progress + '%'});
+
+	       	console.log(msToTime(currentTime));
+	       	$(".from").html(msToTime(currentTime));
+	       	$(".to").html(msToTime(duration - currentTime));
+			}
+
+			function msToTime(duration) {
+			  var seconds = parseInt((duration / 1000) % 60),
+			    minutes = parseInt(duration / (1000 * 60)),
+
+			  minutes = (minutes < 10) ? "0" + minutes : minutes;
+			  seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+			  return minutes + ":" + seconds;
+			}
+
 			$(".next").on("click", function() {nextTrack()});
 			$(".prev").on("click", function() {prevTrack()});
+			$(".play-button").on("click", function() {play($(this).parent().attr("url"))});
 			$(".pause").on("click", function() {
 				if (playing) {
 					pauseTrack();
@@ -186,6 +241,22 @@ $(document).ready(function() {
 				} else {
 					playTrack();
 					playing = true;
+				}
+			});
+
+			$(".shuffle").on("click", function() {
+				if (shuffle) {
+					toggleShuffle(false);
+				} else {
+					toggleShuffle(true);
+				}
+			});
+
+			$(".repeat").on("click", function() {
+				if (repeat) {
+					toggleRepeat("off");
+				} else {
+					toggleRepeat("context");
 				}
 			});
 
@@ -245,6 +316,88 @@ $(document).ready(function() {
 				$.ajax({
 					 method: "POST",
 				   url: 'https://api.spotify.com/v1/me/player/next',
+				   headers: {
+				       'Authorization': 'Bearer ' + _token
+				   },
+				   success: function(response) {
+			        console.log(response);
+				   	
+				   },
+				   error: function(response){
+			        console.log(response);
+			     }
+
+				});
+			};
+
+			function toggleShuffle(value) {
+				$.ajax({
+					 method: "PUT",
+				   url: 'https://api.spotify.com/v1/me/player/shuffle?state=' + value,
+				   headers: {
+				       'Authorization': 'Bearer ' + _token
+				   },
+				   success: function(response) {
+			        console.log(response);
+				   	
+				   },
+				   error: function(response){
+			        console.log(response);
+			     }
+
+				});
+			};
+
+			function toggleRepeat(value) {
+				$.ajax({
+					 method: "PUT",
+				   url: 'https://api.spotify.com/v1/me/player/repeat?state=' + value,
+				   headers: {
+				       'Authorization': 'Bearer ' + _token
+				   },
+				   success: function(response) {
+			        console.log(response);
+				   	
+				   },
+				   error: function(response){
+			        console.log(response);
+			     }
+
+				});
+			};
+
+			function getAlbumSongs(album_url) {
+				$.ajax({
+					 method: "GET",
+				   url: album_url,
+				   headers: {
+				       'Authorization': 'Bearer ' + _token
+				   },
+				   success: function(response) {
+			        console.log(response);
+			        var tracks = response["tracks"]["items"];
+			        tracksArray = {"uris" : []};
+
+			        for (var i = 0; i < tracks.length; i++) {
+			        	tracksArray["uris"].push(tracks[i]["uri"]);
+			        }
+
+			        console.log(tracksArray);
+			        return tracksArray;
+				   	
+				   },
+				   error: function(response){
+			        console.log(response);
+			     }
+
+				});
+			};
+
+			function play(uri) {
+				$.ajax({
+					 method: "PUT",
+				   url: "https://api.spotify.com/v1/me/player/play",
+				   data:  JSON.stringify({"context_uri": uri}),
 				   headers: {
 				       'Authorization': 'Bearer ' + _token
 				   },

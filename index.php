@@ -4,7 +4,7 @@
 	<meta http-equiv="x-ua-compatible" content="IE=edge">
 	<meta charset="UTF-8">
 	<title>spotify background</title>
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 	<link href="styles/main.css" rel="stylesheet" type="text/css"></link>
 </head>
 <body>
@@ -14,15 +14,22 @@
 	<div class="container">	
 		<div class="image" style="width:640px; height:640px"></div>
 		<h1 class="title"></h1>		
-		<h2 class="artist"></h2>
+		<div class="play-this"><h2 class="artist"></h2><div class="play-button"><i class="fa fa-play"></i></div></div>
+		<div class="play-this"><h2 class="album"></h2><div class="play-button"><i class="fa fa-play"></i></div></div>
 	</div>
 	<div class="controls">
+		<div class="shuffle button small"><i class="fas fa-random"></i></div>
 		<div class="prev button"><i class="fa fa-angle-left"></i></div>
 		<div class="pause button"><i class="fa fa-play"></i></div>
 		<div class="next button"><i class="fa fa-angle-right"></i></div>
+		<div class="repeat button small"><i class="fas fa-redo-alt"></i></div>
 	</div>
 
 	<div class="timeline">
+		<div class="time">	
+				<div class="from"></div>
+				<div class="to"></div>
+		</div>
 		<div class="timeline-bar"></div>
 	</div>
 
@@ -87,23 +94,12 @@
 		$expires_in = $result->expires_in;
 		// p_print($result);
 		// set the accesstoken as js variable
-		echo "<script> var _token ='{$token}', _refresh_token = '{$refresh_token}', _expires_in = {$expires_in};</script>";
+		echo "<script> var _token ='{$token}', _refresh_token = '{$refresh_token}', _expires_in = '{$expires_in}';</script>";
 	?>
 
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="scripts/main.js"> </script>
-
-	<script>
-			
-		<?php 
-
-			echo "var hoi = 1;";
-		echo "$.get('https://accounts.spotify.com/authorize?client_id={$client_id}&redirect_uri={$redirect_uri}&scope={$scope}&response_type=code', function(response) {console.log(response);});";
-		 ?>
-
-	</script>
-
 </body>
 </html>

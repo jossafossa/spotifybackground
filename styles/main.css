@@ -10,6 +10,13 @@ body {
   box-sizing: border-box;
 }
 
+h1,h2,h3,h4,h5,h6 {	
+  font-weight: 400;
+  color:white;
+  font-family: 'Lato', sans-serif;
+  text-shadow:1px 1px 20px rgba(0,0,0,0.3);
+}
+
 /*svg {
   position:absolute;
   height:0;
@@ -21,7 +28,12 @@ body {
   background-size:cover;
   background-position:center;
   background-color:black;
-  filter:blur(20px);
+  filter: blur(20px);
+  -webkit-filter: blur(20px);
+  -moz-filter: blur(20px);
+  -o-filter: blur(20px);
+  -ms-filter: blur(20px);
+  filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='20');
   opacity:0.8;
   width:100vw;
   height:100vh;
@@ -39,11 +51,22 @@ body {
   position:relative;
   z-index:2;
   flex-direction: column;
-  color:white;
-  font-family: 'Lato', sans-serif;
-  font-weight: 300;
-  text-shadow:1px 1px 20px rgba(0,0,0,0.3);
   box-shadow: 0 0 400px 70px rgba(0,0,0,1) inset;
+}
+
+.time {
+	z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100vw;
+  padding: 2rem;
+  color: white;
+  box-sizing: border-box;
+  font-family: 'Lato', sans-serif;
+  font-size: 1.5rem;
+  position: absolute;
+  bottom: 0;
 }
 
 .image {
@@ -111,4 +134,33 @@ body {
   top:0;
   left:0;
   z-index: 1000;
+}
+
+
+
+.play-this {
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+
+.play-this .play-button {
+  display:flex;
+  opacity:1;
+  right:0;
+  margin:auto;
+  width:1.5rem;
+  height:1.5rem;
+  margin-left: .5rem;
+  margin-top:4px;
+  margin-bottom:0px;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background-color:rgba(0,0,0,0.2);
+  color:white;
+  font-size:.5rem;
+  transition:.2s;
+  cursor:pointer;
 }
