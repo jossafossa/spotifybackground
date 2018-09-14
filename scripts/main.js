@@ -204,9 +204,9 @@ $(document).ready(function() {
 	       	bg2.attr({"href":coverSmall});
 	       	title.text(titleText);
 	       	artist.text(artistText);
-	       	artist.parent().attr({"url": albumUri});
+	       	artist.parent().attr({"url": artistUri});
 	       	album.text(albumText);
-	       	album.parent().attr({"url": artistUri});
+	       	album.parent().attr({"url": albumUri});
 
 
 	       	// timeline
