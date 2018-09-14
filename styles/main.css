@@ -137,6 +137,15 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 
+.button.small {
+  width:3rem;
+  height:3rem;
+}
+
+.button.active {
+  background-color:rgba(0,0,0,0.6);
+}
+
 
 .play-this {
   position:relative;
