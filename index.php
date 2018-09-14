@@ -1,3 +1,51 @@
+<?php 
+		// api settings
+		$client_id = 'f8c1676b7739450daf60050339b297b5';
+		$client_secret = '6fa89bf4e01243d38414cee037b074e0';
+		$redirect_uri = 'https://slightlyshifted.nl/spotifybackground/';
+		$scope = [
+			"user-read-email", 
+			"user-read-currently-playing", 
+			"user-read-playback-state",
+			"user-modify-playback-state"
+		];
+		$scope = join("%20", $scope); // convert array to querystring
+		/////////////////////////////////////////////////////////////////////////
+		// GET CODE
+		/////////////////////////////////////////////////////////////////////////
+		if ( !isset( $_GET["code"]) ) {
+			header("Location: https://accounts.spotify.com/authorize?client_id={$client_id}&redirect_uri={$redirect_uri}&scope={$scope}&response_type=code");
+		} else {
+			$code = $_GET["code"];
+		}
+		/////////////////////////////////////////////////////////////////////////
+		// GET ACCESS TOKEN
+		/////////////////////////////////////////////////////////////////////////
+		$token_url = "https://accounts.spotify.com/api/token";
+		$body = array(
+			"grant_type" => "authorization_code",
+		  "code" => $code,
+		  "redirect_uri" => $redirect_uri,
+		  'client_id' => $client_id,
+		  'client_secret' => $client_secret
+		);
+		$opts = array(
+			'http' => array(
+		    'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+        'method'  => 'POST',
+		    'content' => http_build_query($body)
+		  )
+		);
+		$context  = stream_context_create($opts);
+		$result = json_decode( file_get_contents($token_url, false, $context) );
+		$token = $result->access_token;
+		$refresh_token = $result->refresh_token;
+		$expires_in = $result->expires_in;
+		// p_print($result);
+		// set the accesstoken as js variable
+		echo "<script> var _token ='{$token}', _refresh_token = '{$refresh_token}', _expires_in = '{$expires_in}';</script>";
+	?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,71 +82,6 @@
 	</div>
 
 	<div class="refresh button"><i class="fa fa-sync"></i></div>
-
-
-
-
-
-	<?php 
-		function console_log($data) {
-			echo "<script>console.log('{$data}')</script>";
-		}
-		function p_print($data) {
-			echo "<pre>";
-			print_r($data);
-			echo "</pre>";
-		}
-		// api settings
-		$client_id = 'f8c1676b7739450daf60050339b297b5';
-		$client_secret = '6fa89bf4e01243d38414cee037b074e0';
-		$redirect_uri = 'http://localhost/spotifybackground/';
-		$scope = [
-			"user-read-email", 
-			"user-read-currently-playing", 
-			"user-read-playback-state",
-			"user-modify-playback-state"
-		];
-		$scope = join("%20", $scope); // convert array to querystring
-		/////////////////////////////////////////////////////////////////////////
-		// GET CODE
-		/////////////////////////////////////////////////////////////////////////
-		if ( !isset( $_GET["code"]) ) {
-			console_log("getting code");
-			header("Location: https://accounts.spotify.com/authorize?client_id={$client_id}&redirect_uri={$redirect_uri}&scope={$scope}&response_type=code");
-		} else {
-			$code = $_GET["code"];
-			console_log("code=" . $_GET["code"]);
-		}
-		/////////////////////////////////////////////////////////////////////////
-		// GET ACCESS TOKEN
-		/////////////////////////////////////////////////////////////////////////
-		$token_url = "https://accounts.spotify.com/api/token";
-		$body = array(
-			"grant_type" => "authorization_code",
-		  "code" => $code,
-		  "redirect_uri" => $redirect_uri,
-		  'client_id' => $client_id,
-		  'client_secret' => $client_secret
-		);
-		$opts = array(
-			'http' => array(
-		    'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-        'method'  => 'POST',
-		    'content' => http_build_query($body)
-		  )
-		);
-		$context  = stream_context_create($opts);
-		$result = json_decode( file_get_contents($token_url, false, $context) );
-		$token = $result->access_token;
-		$refresh_token = $result->refresh_token;
-		$expires_in = $result->expires_in;
-		// p_print($result);
-		// set the accesstoken as js variable
-		echo "<script> var _token ='{$token}', _refresh_token = '{$refresh_token}', _expires_in = '{$expires_in}';</script>";
-	?>
-
-
-
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="scripts/main.js"> </script>
 </body>
