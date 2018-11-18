@@ -20,7 +20,8 @@
 	        'scope' => [
 	            'user-read-email',
 	            'user-read-currently-playing',
-	            'user-read-playback-state'
+	            'user-read-playback-state',
+	            "user-read-recently-played"
 	        ],
 	    ];
 

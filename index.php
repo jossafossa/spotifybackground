@@ -7,7 +7,8 @@
 			"user-read-email", 
 			"user-read-currently-playing", 
 			"user-read-playback-state",
-			"user-modify-playback-state"
+			"user-modify-playback-state",
+			"user-read-recently-played"
 		];
 		$scope = join("%20", $scope); // convert array to querystring
 		/////////////////////////////////////////////////////////////////////////
@@ -54,17 +55,21 @@
 	<title>spotify background</title>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 	<link href="styles/main.css" rel="stylesheet" type="text/css"></link>
+	<meta name="viewport" content="width=device-width, initial-scale=.8, maximum-scale=.8, user-scalable=no" />	
+	<meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 
 	<div class="background"></div>
-  
-	<div class="container">	
-		<div class="image" style="width:640px; height:640px"></div>
-		<h1 class="title"></h1>		
-		<div class="play-this"><h2 class="artist"></h2><div class="play-button"><i class="fa fa-play"></i></div></div>
-		<div class="play-this"><h2 class="album"></h2><div class="play-button"><i class="fa fa-play"></i></div></div>
-	</div>
+  	<div class="container-wrapper">
+  		<div class="container">	
+			<div class="image" style="width:640px; height:640px"></div>
+			<h1 class="title"></h1>		
+			<div class="play-this"><h2 class="artist"></h2><div class="play-button"><i class="fa fa-play"></i></div></div>
+			<div class="play-this"><h2 class="album"></h2><div class="play-button"><i class="fa fa-play"></i></div></div>
+		</div>
+  	</div>
+	
 	<div class="controls">
 		<div class="shuffle button small"><i class="fas fa-random"></i></div>
 		<div class="prev button"><i class="fa fa-angle-left"></i></div>

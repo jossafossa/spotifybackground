@@ -1,5 +1,10 @@
 $(document).ready(function() {
 
+	// First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+	let vh = window.innerHeight * 0.01;
+	// Then we set the value in the --vh custom property to the root of the document
+	document.documentElement.style.setProperty('--vh', `${vh}px`);
+	
 			var image = $('.image');
 			var bg = $('.background');
 			var bg2 = $('#svg-image');
@@ -38,100 +43,6 @@ $(document).ready(function() {
 			$('.refresh').on('click', function() {
 				window.location = window.location.href.split("?")[0];
 			})
-			
-			// set correct bg size
-			// bg2.attr("width", window.innerWidth );
-			// bg2.attr("height", window.innerHeight );
-			// $("#svg-image-blur").attr("height", window.innerHeight );
-			// $("#svg-image-blur").attr("width", window.innerWidth );
-
-			// bg2.attr("y", -((window.innerWidth - window.innerHeight) / 2));
-
-			// Get the hash of the url
-			// var hash = window.location.hash
-			// .substring(1)
-			// .split('&')
-			// .reduce(function (initial, item) {
-			//   if (item) {
-			//     var parts = item.split('=');
-			//     initial[parts[0]] = decodeURIComponent(parts[1]);
-			//   }
-			//   return initial;
-			// }, {});
-
-			// var getUrlParameter = function getUrlParameter(sParam) {
-			//     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-			//         sURLVariables = sPageURL.split('&'),
-			//         sParameterName,
-			//         i;
-
-			//     for (i = 0; i < sURLVariables.length; i++) {
-			//         sParameterName = sURLVariables[i].split('=');
-
-			//         if (sParameterName[0] === sParam) {
-			//             return sParameterName[1] === undefined ? true : sParameterName[1];
-			//         }
-			//     }
-			// };
-
-
-
-
-			// var authEndpoint = 'https://accounts.spotify.com/authorize';
-
-			// // Replace with your app's client ID, redirect URI and desired scopes
-			// var clientId = 'f8c1676b7739450daf60050339b297b5';
-			// var clientSecret = '6fa89bf4e01243d38414cee037b074e0';
-			// var redirectUri = 'http://localhost/spotifybackground/';
-			// var scopes = [
-			// 	"user-read-email", 
-			// 	"user-read-currently-playing", 
-			// 	"user-read-playback-state",
-			// 	"user-modify-playback-state"
-			// ];
-
-
-			// // if code is not defined get a code
-			// if (getUrlParameter("code") == null ) {
-			// 	console.log("no code yet");
-			// 	window.location = "" + authEndpoint + "?client_id=" + clientId + "&redirect_uri=" + redirectUri + "&scope=" + scopes.join('%20') + "&response_type=code";
-			// } else {								
-			// 	var code = getUrlParameter("code");
-			// 	console.log("there is a code = " + code + ", getting access_token");
-			// 	console.log(JSON.stringify({
-			// 		   grant_type: "authorization_code",
-			// 		   code: code,
-			// 		   redirect_uri: redirectUri
-			// 		 }));
-			// 	$.ajax({
-			// 		method: "POST",
-			// 		contentType: "application/x-www-form-urlencoded",
-			// 	   url: "https://accounts.spotify.com/api/token",
-			// 	   headers: {
-			// 	       'Authorization': 'Basic ' + clientId + ":" + clientSecret
-			// 	   },
-			// 	   data: {
-			// 		   grant_type: "authorization_code",
-			// 		   code: code,
-			// 		   redirect_uri: redirectUri
-			// 		 },
-			// 	   success: function(response) {
-			// 	   		console.log(response)
-			// 	   }, 
-			// 	   error: function(response) {
-			// 	   	console.log("%c Error", 'color:red');
-			// 	   		console.log(response);
-			// 	   }
-			// 	});
-			// }
-
-
-
-			
-
-			// var _token = hash.access_token;
-
-			// console.log(_token);
 
 			
 			getMyCurrentTrack();
@@ -157,68 +68,37 @@ $(document).ready(function() {
 
 			function update(response) {
 
-				$.ajax({
-				   url: 'https://api.spotify.com/v1/me/player',
-				   headers: {
-				       'Authorization': 'Bearer ' + _token
-				   },
-				   success: function(response) {	
-						 shuffle = response["shuffle_state"];
-						 repeat = (response["repeat_state"] == "off" ? false : true );
-						 console.log(repeat);
-						 console.log(shuffle);
-
-						if (shuffle) {
-							$(".shuffle").addClass("active");
-						} else {
-							$(".shuffle").removeClass("active");
-						}
-
-						if (repeat) {
-							$(".repeat").addClass("active");
-						} else {
-							$(".repeat").removeClass("active");
-						}
-
-				   }
-				});
-
-				cover = response['item']['album']['images'][0]['url'];
-	   		coverSmall = response['item']['album']['images'][0]['url'];
-	   		titleText = response['item']['name'];
-	   		artistText = response['item']['artists'][0]['name'];
-	   		artistUri = response['item']['artists'][0]['uri'];
-	   		albumText = response['item']['album']['name'];
-	   		albumUri = response['item']['album']['uri'];
-
-	       	playing = response["is_playing"];
-	       	if (playing == true) {
-	   				$('.pause i').attr("class","fa fa-pause");	
-	       	} else {				       		
-	   				$('.pause i').attr("class","fa fa-play");	
-	       	}
-	       	console.log("updating");
-	       	console.log(response);
-	       	image.css({"background-image":"url('" + cover + "')"});
-	       	bg.css({"background-image":"url('" + coverSmall + "')"});
-	       	bg2.attr({"href":coverSmall});
-	       	title.text(titleText);
-	       	artist.text(artistText);
-	       	artist.parent().attr({"url": artistUri});
-	       	album.text(albumText);
-	       	album.parent().attr({"url": albumUri});
+				getPlayingInfo()
 
 
-	       	// timeline
+				
+	   		
+			}
 
-	       	currentTime = response['progress_ms'];
-	       	duration = response['item']['duration_ms'];
-	       	progress = 100 /duration * currentTime;
-	       	timeline.css({'width': progress + '%'});
+			function setInfo(track) {				
+				var settings = {
+	   			cover: track['album']['images'][0]['url'],
+					coverSmall: track['album']['images'][0]['url'],
+					titleText: track['name'],
+					artistText: track['artists'][0]['name'],
+					artistUri: track['artists'][0]['uri'],
+					albumText: track['album']['name'],
+					albumUri: track['album']['uri'],
+	   		}
 
-	       	console.log(msToTime(currentTime));
-	       	$(".from").html(msToTime(currentTime));
-	       	$(".to").html(msToTime(duration - currentTime));
+	   		image.css({"background-image":"url('" + settings["cover"] + "')"});
+       	bg.css({"background-image":"url('" + settings["coverSmall"] + "')"});
+       	bg2.attr({"href":settings["coverSmall"]});
+       	title.text(settings["titleText"]);
+       	artist.text(settings["artistText"]);
+       	artist.parent().attr({"url": settings["artistUri"]});
+       	album.text(settings["albumText"]);
+       	album.parent().attr({"url": settings["albumUri"]});
+			}
+
+			function saveToCookies(data) {
+				settings = JSON.stringify(data)
+				localStorage.setItem(settings, settings);
 			}
 
 			function msToTime(duration) {
@@ -259,6 +139,92 @@ $(document).ready(function() {
 					toggleRepeat("context");
 				}
 			});
+
+			function updatePlayingState(state) {				
+				$(".controls, .timeline").removeClass("disabled");
+				shuffle = state["shuffle_state"];
+				repeat = (state["repeat_state"] == "off" ? false : true );
+				console.log(repeat);
+				console.log(shuffle);
+
+				if (shuffle) {
+					$(".shuffle").addClass("active");
+				} else {
+					$(".shuffle").removeClass("active");
+				}
+
+				if (repeat) {
+					$(".repeat").addClass("active");
+				} else {
+					$(".repeat").removeClass("active");
+				}
+
+				playing = state["is_playing"];
+       	if (playing == true) {
+   				$('.pause i').attr("class","fa fa-pause");	
+       	} else {				       		
+   				$('.pause i').attr("class","fa fa-play");	
+       	}
+       	console.log("updating");
+       	console.log(state);
+       	
+
+
+       	// timeline
+
+       	currentTime = state['progress_ms'];
+       	duration = state['item']['duration_ms'];
+       	progress = 100 /duration * currentTime;
+       	timeline.css({'width': progress + '%'});
+
+       	console.log(msToTime(currentTime));
+       	$(".from").html(msToTime(currentTime));
+       	$(".to").html(msToTime(duration - currentTime));
+			}
+
+			function disableUI() {
+				$(".controls, .timeline").addClass("disabled");
+			}
+
+			function getLatestTrack() {
+				$.ajax({
+					 method: "GET",
+				   url: "https://api.spotify.com/v1/me/player/recently-played",
+				   headers: {
+				       'Authorization': 'Bearer ' + _token
+				   },
+				   success: function(response) {
+			        console.log(response["items"][response["items"].length - 1]);
+			        setInfo(response["items"][response["items"].length - 1]["track"]);
+				   	
+				   },
+				   error: function(response){
+			        console.log(response);
+			     }
+
+				});
+			};
+
+			function getPlayingInfo() {
+				$.ajax({
+				   url: 'https://api.spotify.com/v1/me/player',
+				   headers: {
+				       'Authorization': 'Bearer ' + _token
+				   },
+				   success: function(response) {	
+				   	console.log(response);
+				   	if (response != undefined) {
+				   		track = response["item"];
+				   		setInfo(track);
+				   		updatePlayingState(response);
+						} else {
+							getLatestTrack();
+							disableUI();
+						}
+					}
+
+				});
+			}
 
 			function prevTrack() {
 				$.ajax({
